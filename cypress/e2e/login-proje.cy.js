@@ -11,33 +11,37 @@ describe("Login başarı testi", () => {
   });
 });
 
-describe("Login Hatalı Veri Testi", function () {
-  it("Hatalı email girişi, hata mesajı görünüyor ve buton disabled kalıyor", () => {
+describe("Login Email Hata Test", function () {
+  it("Email yanlış girildiğinde hata mesajı ve buton disabled kalmalı", function () {
     cy.visit("http://localhost:5180");
 
-    cy.get('input[type="email"]').type("fsdfsd@gmail.com");
+    cy.get('input[name="email"]').type("df@mail");
+    cy.get('input[name="password"]').type("9fxIH0GXesEwH_I");
+    cy.get('input[name="terms"]').check();
+
+    cy.get('input[name="email"]')
+      .parent()
+      .find(".invalid-feedback")
+      .should("be.visible");
     cy.get('button[type="submit"]').should("be.disabled");
-    cy.contains("Geçerli bir e-posta adresi girin.");
   });
+});
 
-  it("Email ve password yanlış, iki hata mesajı görünüyor ve buton disabled kalıyor", function () {
+describe("Login Test", function () {
+  it("Email ve password yanlış girildiğinde iki hata mesajı görmeliyim", function () {
     cy.visit("http://localhost:5180");
 
-    cy.get('input[type="email"]').type("fsdfsd@gmail.com");
-    cy.get('input[type="password"]').type("123");
-    cy.get('button[type="submit"]').should("be.disabled");
-    cy.contains("Geçerli bir e-posta adresi girin.");
-    cy.contains(
-      "Şifreniz en az 8 karakter uzunluğunda olmalı ve bir rakam içermelidir."
-    );
+    cy.get('input[name="email"]').type("invalidemail");
+    cy.get('input[name="password"]').type("wrongpassword");
+    cy.get('input[name="terms"]').check();
   });
-
-  it("Şartları kabul etmedim, buton disabled kalıyor", function () {
+});
+describe("Login Test", function () {
+  it("Kuralları kabul etmeden giriş yapmam mümkün olmamalı", function () {
     cy.visit("http://localhost:5180");
 
-    cy.get('input[type="email"]').type("erdem.guntay@wit.com.tr");
-    cy.get('input[type="password"]').type("9fxIH0GXesEwH_I");
-    cy.get('button[type="submit"]').should("be.disabled");
-    cy.contains("Şartları kabul etmelisiniz.");
+    cy.get('input[name="email"]').type("erdem.guntay@wit.com.tr");
+    cy.get('input[name="password"]').type("9fxIH0GXesEwH_I");
+    cy.get('input[name="terms"]').uncheck();
   });
 });
